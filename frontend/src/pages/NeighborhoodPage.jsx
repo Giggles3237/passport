@@ -300,7 +300,7 @@ const NeighborhoodPage = () => {
       {showFirstNamePrompt && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(255,255,255,0.97)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <form onSubmit={handleFirstNameSubmit} style={{ background: '#fff', padding: 32, borderRadius: 12, boxShadow: '0 4px 16px #bbb', border: '2px solid #1c69d4', textAlign: 'center', color: '#111' }}>
-            <h2 style={{ color: '#1c69d4' }}>We've ought to get to know each other better.</h2>
+            <h2 style={{ color: '#1c69d4' }}>So, you have visited us a couple of times, we should really be on a first name basis. What's yours?</h2>
             <label style={{ fontSize: 18, color: '#111' }}>What's your first name?</label>
             <input value={firstNameInput} onChange={e => setFirstNameInput(e.target.value)} required style={{ width: '100%', margin: '16px 0', padding: 8, fontSize: 16, color: '#111', background: '#fff', border: '2px solid #1c69d4', borderRadius: 6, boxShadow: '0 1px 4px #bbb', outline: 'none' }} />
             <button type="submit" style={{ background: '#1c69d4', color: '#fff', padding: '10px 24px', border: 'none', borderRadius: 6, fontWeight: 'bold', fontSize: 16 }}>Continue</button>

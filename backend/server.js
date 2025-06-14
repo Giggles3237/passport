@@ -6,6 +6,7 @@ import registerRouter from './routes/register.js';
 import userRouter from './routes/user.js';
 import stampRouter from './routes/stamp.js';
 import locationRouter from './routes/location.js';
+import adminRouter from './routes/admin.js';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use('/api/register', registerRouter);
 app.use('/api/user', userRouter);
 app.use('/api/stamp', stampRouter);
 app.use('/api/location', locationRouter);
+app.use('/api/admin', adminRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
