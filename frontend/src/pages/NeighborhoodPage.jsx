@@ -214,12 +214,27 @@ const NeighborhoodPage = () => {
     }
   };
 
-  const handleEmailSubmit = (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
     if (emailInput.trim()) {
       Cookies.set('email', emailInput.trim(), { expires: 365 });
       setEmail(emailInput.trim());
       setShowEmailPrompt(false);
+      // Register user
+      const name = Cookies.get('first_name');
+      const email = emailInput.trim();
+      try {
+        const res = await fetch(`${API_URL}/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, store_id: 1 }),
+          credentials: 'include',
+        });
+        const data = await res.json();
+        if (data.user_id) {
+          Cookies.set('user_id', data.user_id, { expires: 365 });
+        }
+      } catch {}
     }
   };
 
@@ -247,6 +262,7 @@ const NeighborhoodPage = () => {
         <div style={{ textAlign: 'center', padding: '32px 0 0 0' }}>
           <h1 style={{ fontSize: 44, color: '#1c69d4', margin: 0, fontWeight: 900, letterSpacing: '-1px', fontFamily: 'Arial, Helvetica, sans-serif' }}>{EVENT_NAME}</h1>
           <div style={{ fontSize: 20, color: '#222', margin: '12px 0 24px 0', fontWeight: 500 }}>{EVENT_TAGLINE}</div>
+          {firstName && <div style={{ fontSize: 22, color: '#1c69d4', marginTop: 12 }}>Welcome back, {firstName}!</div>}
         </div>
         {/* Hero Section */}
         <section style={{ backgroundImage: `url(${n.hero})`, backgroundSize: 'cover', backgroundPosition: 'center', padding: '48px 0', color: '#fff', textAlign: 'center' }}>

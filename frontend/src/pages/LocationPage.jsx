@@ -89,12 +89,27 @@ const LocationPage = () => {
     }
   };
 
-  const handleEmailSubmit = (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
     if (emailInput.trim()) {
       Cookies.set('email', emailInput.trim(), { expires: 365 });
       setEmail(emailInput.trim());
       setShowEmailPrompt(false);
+      // Register user
+      const name = Cookies.get('first_name');
+      const email = emailInput.trim();
+      try {
+        const res = await fetch(`${API_URL}/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, store_id: 1 }),
+          credentials: 'include',
+        });
+        const data = await res.json();
+        if (data.user_id) {
+          Cookies.set('user_id', data.user_id, { expires: 365 });
+        }
+      } catch {}
     }
   };
 
@@ -111,6 +126,7 @@ const LocationPage = () => {
           <h1 style={{ color: '#1c69d4', fontFamily: 'Arial, Helvetica, sans-serif' }}>
             {location ? `Welcome to ${location.name}!` : 'Loading...'}
           </h1>
+          {firstName && <div style={{ fontSize: 22, color: '#1c69d4', marginBottom: 12 }}>Welcome back, {firstName}!</div>}
           <p style={{ fontSize: 18 }}>You just collected a digital stamp for your passport.</p>
           <p style={{ color: '#888' }}>Scan more QR codes at other locations to collect more stamps.</p>
         </>

@@ -46,7 +46,19 @@ const MyPassportPage = () => {
       {loading ? (
         <p>Loading...</p>
       ) : error ? (
-        <p style={{ color: 'red' }}>{error}</p>
+        <>
+          <p style={{ color: 'red' }}>{error}</p>
+          <h3 style={{ color: '#1c69d4' }}>Collected Stamps</h3>
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            {collectedStamps.length === 0 && <li>No stamps collected yet.</li>}
+            {collectedStamps.map(id => (
+              <li key={id} style={{ marginBottom: 12, padding: 8, background: '#f4f8fb', borderRadius: 6 }}>
+                <span role="img" aria-label="stamp">📍</span> Location {id}
+              </li>
+            ))}
+          </ul>
+          <p style={{ color: '#888', marginTop: 16 }}>Register your passport to save your progress and unlock more features.</p>
+        </>
       ) : (
         <>
           <div style={{ marginBottom: 24 }}>
