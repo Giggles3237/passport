@@ -1,0 +1,7 @@
+[build]
+  base = "frontend"
+  publish = "dist"
+  command = "npm run build"
+
+[build.environment]
+  VITE_API_URL = "https://howtopgh-748bdbaeb288.herokuapp.com/api" 
