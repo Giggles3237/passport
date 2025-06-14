@@ -1,0 +1,5 @@
+DB_HOST=bmwpassportmysql.mysql.database.azure.com
+DB_USER=Giggles3237@bmwpassportmysql
+DB_PASSWORD=MINIis#1
+DB_NAME=bmwpassport
+DB_PORT=3306

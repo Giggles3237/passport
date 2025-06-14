@@ -1,0 +1,552 @@
+/* BMW Charity Scavenger Hunt - Main Stylesheet
+ * Created: June 13, 2025
+ * Description: CSS styling for BMW-themed charity scavenger hunt across Pittsburgh neighborhoods
+ */
+
+/* ===== VARIABLES ===== */
+:root {
+  /* BMW Brand Colors */
+  --bmw-black: #000000;
+  --bmw-white: #FFFFFF;
+  --bmw-blue: #009ADA;
+  --bmw-dark-blue: #16588E;
+  --bmw-light-blue: #81C4FF;
+  --bmw-red: #E7222E;
+  
+  /* Additional Colors */
+  --bmw-gray-light: #F2F2F2;
+  --bmw-gray-medium: #CCCCCC;
+  --bmw-gray-dark: #333333;
+  
+  /* Typography */
+  --font-primary: 'BMW Type Next', 'Helvetica Neue', Arial, sans-serif;
+  --font-secondary: 'Helvetica Neue', Arial, sans-serif;
+  
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  /* Border Radius */
+  --border-radius-sm: 2px;
+  --border-radius-md: 4px;
+  --border-radius-lg: 8px;
+}
+
+/* ===== RESET & BASE STYLES ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-secondary);
+  line-height: 1.6;
+  color: var(--bmw-gray-dark);
+  background-color: var(--bmw-white);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--bmw-blue);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--bmw-dark-blue);
+}
+
+/* ===== TYPOGRAPHY ===== */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--spacing-md);
+  color: var(--bmw-black);
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+p {
+  margin-bottom: var(--spacing-md);
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ===== LAYOUT ===== */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -15px;
+}
+
+.col {
+  flex: 1;
+  padding: 0 15px;
+}
+
+/* Responsive columns */
+@media (max-width: 768px) {
+  .row {
+    flex-direction: column;
+  }
+  
+  .col {
+    margin-bottom: var(--spacing-md);
+  }
+}
+
+/* ===== HEADER ===== */
+.site-header {
+  background-color: var(--bmw-black);
+  color: var(--bmw-white);
+  padding: var(--spacing-md) 0;
+  position: relative;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 40px;
+  margin-right: var(--spacing-sm);
+}
+
+.logo-text {
+  font-family: var(--font-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--bmw-white);
+}
+
+/* ===== NAVIGATION ===== */
+.main-nav ul {
+  display: flex;
+  list-style: none;
+}
+
+.main-nav li {
+  margin-left: var(--spacing-lg);
+}
+
+.main-nav a {
+  color: var(--bmw-white);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.main-nav a:hover {
+  color: var(--bmw-blue);
+}
+
+.main-nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--bmw-blue);
+  transition: width 0.3s ease;
+}
+
+.main-nav a:hover::after {
+  width: 100%;
+}
+
+/* Mobile navigation */
+.mobile-nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--bmw-white);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .main-nav {
+    display: none;
+  }
+  
+  .mobile-nav-toggle {
+    display: block;
+  }
+  
+  .main-nav.active {
+    display: block;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--bmw-black);
+    padding: var(--spacing-md);
+    z-index: 100;
+  }
+  
+  .main-nav.active ul {
+    flex-direction: column;
+  }
+  
+  .main-nav.active li {
+    margin: var(--spacing-sm) 0;
+  }
+}
+
+/* ===== HERO SECTION ===== */
+.hero {
+  position: relative;
+  height: 60vh;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  color: var(--bmw-white);
+  text-align: center;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  padding: var(--spacing-lg);
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-md);
+  color: var(--bmw-white);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* ===== NEIGHBORHOOD SECTION ===== */
+.neighborhood-section {
+  padding: var(--spacing-xl) 0;
+}
+
+.neighborhood-info {
+  margin-bottom: var(--spacing-lg);
+}
+
+.neighborhood-image {
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  margin-bottom: var(--spacing-lg);
+}
+
+.neighborhood-features {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-lg);
+}
+
+.feature-card {
+  background-color: var(--bmw-gray-light);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-lg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.feature-card h3 {
+  color: var(--bmw-black);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* ===== BMW BRANDING ELEMENTS ===== */
+.bmw-branding {
+  background-color: var(--bmw-black);
+  color: var(--bmw-white);
+  padding: var(--spacing-xl) 0;
+  text-align: center;
+}
+
+.bmw-logo {
+  margin: 0 auto var(--spacing-lg);
+  max-width: 100px;
+}
+
+.bmw-tagline {
+  font-family: var(--font-primary);
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: var(--spacing-lg);
+  letter-spacing: 1px;
+}
+
+.bmw-description {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  font-family: var(--font-primary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: var(--border-radius-md);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: var(--bmw-blue);
+  color: var(--bmw-white);
+}
+
+.btn-primary:hover {
+  background-color: var(--bmw-dark-blue);
+  color: var(--bmw-white);
+}
+
+.btn-secondary {
+  background-color: var(--bmw-white);
+  color: var(--bmw-black);
+  border: 2px solid var(--bmw-black);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bmw-black);
+  color: var(--bmw-white);
+}
+
+.btn-large {
+  padding: 16px 32px;
+  font-size: 1.1rem;
+}
+
+/* ===== FORMS ===== */
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+label {
+  display: block;
+  margin-bottom: var(--spacing-xs);
+  font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--bmw-gray-medium);
+  border-radius: var(--border-radius-md);
+  font-family: var(--font-secondary);
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--bmw-blue);
+  box-shadow: 0 0 0 2px rgba(0, 154, 218, 0.2);
+}
+
+.form-error {
+  color: var(--bmw-red);
+  font-size: 0.9rem;
+  margin-top: var(--spacing-xs);
+}
+
+/* ===== FOOTER ===== */
+.site-footer {
+  background-color: var(--bmw-black);
+  color: var(--bmw-white);
+  padding: var(--spacing-xl) 0;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 250px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.footer-column h4 {
+  color: var(--bmw-white);
+  margin-bottom: var(--spacing-md);
+  position: relative;
+  padding-bottom: var(--spacing-sm);
+}
+
+.footer-column h4::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background-color: var(--bmw-blue);
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: var(--spacing-sm);
+}
+
+.footer-links a {
+  color: var(--bmw-gray-medium);
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+  color: var(--bmw-blue);
+}
+
+.footer-bottom {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--bmw-gray-medium);
+}
+
+/* ===== UTILITIES ===== */
+.mt-1 { margin-top: var(--spacing-xs); }
+.mt-2 { margin-top: var(--spacing-sm); }
+.mt-3 { margin-top: var(--spacing-md); }
+.mt-4 { margin-top: var(--spacing-lg); }
+.mt-5 { margin-top: var(--spacing-xl); }
+
+.mb-1 { margin-bottom: var(--spacing-xs); }
+.mb-2 { margin-bottom: var(--spacing-sm); }
+.mb-3 { margin-bottom: var(--spacing-md); }
+.mb-4 { margin-bottom: var(--spacing-lg); }
+.mb-5 { margin-bottom: var(--spacing-xl); }
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+.d-flex { display: flex; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.align-center { align-items: center; }
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 992px) {
+  h1 { font-size: 2.2rem; }
+  h2 { font-size: 1.8rem; }
+  h3 { font-size: 1.5rem; }
+  
+  .hero h1 { font-size: 2.5rem; }
+}
+
+@media (max-width: 768px) {
+  h1 { font-size: 2rem; }
+  h2 { font-size: 1.6rem; }
+  h3 { font-size: 1.3rem; }
+  
+  .hero { height: 50vh; }
+  .hero h1 { font-size: 2.2rem; }
+  
+  .footer-content {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 576px) {
+  html { font-size: 14px; }
+  
+  .hero { height: 40vh; }
+  .hero h1 { font-size: 1.8rem; }
+  
+  .btn {
+    display: block;
+    width: 100%;
+  }
+}
