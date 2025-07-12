@@ -13,7 +13,7 @@ const MyPassportPage = () => {
   useEffect(() => {
     const user_id = Cookies.get('user_id');
     if (!user_id) {
-      setError('No registration found. Please register your passport.');
+      setError('User information not found.');
       setLoading(false);
       return;
     }
@@ -57,7 +57,6 @@ const MyPassportPage = () => {
               </li>
             ))}
           </ul>
-          <p style={{ color: '#888', marginTop: 16 }}>Register your passport to save your progress and unlock more features.</p>
         </>
       ) : (
         <>
