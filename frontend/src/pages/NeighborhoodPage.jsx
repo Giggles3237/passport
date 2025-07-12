@@ -59,6 +59,34 @@ const NEIGHBORHOODS = {
       }
     ],
     next: {
+      slug: 'downtown',
+      label: 'Continue to Downtown',
+      text: `Continue your journey through Pittsburgh's vibrant neighborhoods by heading to Downtown Pittsburgh, the city's central district brimming with cultural landmarks.`
+    }
+  },
+  downtown: {
+    title: 'Downtown',
+    hero: '/assets/images/neighborhoods/strip_district_hero.jpg',
+    tagline: 'The Heart of Pittsburgh',
+    welcome: 'Welcome to Downtown',
+    intro: `Explore Downtown Pittsburgh, the city's central district where skyscrapers meet the three rivers and culture thrives.`,
+    featureImg: '/assets/images/neighborhoods/strip_district_feature.jpg',
+    about: `Known as the Golden Triangle, Downtown has long been Pittsburgh's commercial and cultural hub. Historic architecture stands alongside modern skyscrapers, theaters, and sports venues.`,
+    features: [
+      {
+        title: 'Notable Landmarks',
+        text: `Point State Park, Market Square, and the gleaming towers of PPG Place celebrate Pittsburgh's rich history.`
+      },
+      {
+        title: 'Culinary Highlights',
+        text: `The Speckled Egg and Cafe Momentum showcase the neighborhood's diverse and growing food scene.`
+      },
+      {
+        title: 'BMW Connection',
+        text: `Downtown's blend of tradition and innovation mirrors BMW's commitment to forward-thinking design.`
+      }
+    ],
+    next: {
       slug: 'bloomfield',
       label: 'Continue to Bloomfield',
       text: `Continue your journey through Pittsburgh's vibrant neighborhoods by heading to Bloomfield, Pittsburgh's "Little Italy," where European heritage and culinary traditions await.`
@@ -203,7 +231,7 @@ const NeighborhoodPage = () => {
       const stampCount = Object.keys(Cookies.get()).filter(k => k.startsWith('stamp_location_')).length;
       if (!firstName && (stampCount === 2)) {
         setShowFirstNamePrompt(true);
-      } else if (!email && (stampCount === 4 || stampCount === 5)) {
+      } else if (!email && (stampCount === 5 || stampCount === 6)) {
         setShowEmailPrompt(true);
       }
     }

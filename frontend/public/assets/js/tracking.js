@@ -13,13 +13,14 @@ const BMWScavengerHunt = {
     neighborhoods: [
       'lawrenceville',
       'strip_district',
+      'downtown',
       'bloomfield',
       'shadyside',
       'regent_square'
     ],
     formThreshold: {
       name: 3, // Show name form after visiting 3 locations
-      email: 5  // Show email form after visiting all 5 locations
+      email: 6  // Show email form after visiting all 6 locations
     }
   },
   
