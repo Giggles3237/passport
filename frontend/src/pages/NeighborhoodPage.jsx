@@ -322,7 +322,6 @@ const NeighborhoodPage = () => {
           <div style={{ textAlign: 'center', margin: '40px 0' }}>
             <h3 style={{ color: '#111' }}>Your Next Destination</h3>
             <p style={{ color: '#222' }}>{n.next.text}</p>
-            <Link to={`/location/${n.next.slug}`} style={{ display: 'inline-block', background: '#1c69d4', color: '#fff', padding: '12px 32px', borderRadius: 8, fontWeight: 'bold', fontSize: 18, textDecoration: 'none', marginTop: 16 }}>{n.next.label}</Link>
           </div>
         </section>
         {/* BMW Branding Section */}
