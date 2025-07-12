@@ -7,31 +7,19 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 const PassportStampAnimation = ({ onDone }) => {
   useEffect(() => {
-    const timer = setTimeout(onDone, 2000); // 2 seconds
+    const timer = setTimeout(onDone, 3000);
     return () => clearTimeout(timer);
   }, [onDone]);
   return (
     <div style={{
       position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
-      background: 'rgba(255,255,255,0.95)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center',
-      transition: 'opacity 0.5s'
+      background: '#fff', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center'
     }}>
-      <div style={{ textAlign: 'center' }}>
-        <svg width="160" height="160" viewBox="0 0 160 160">
-          <circle cx="80" cy="80" r="70" fill="#fff" stroke="#1c69d4" strokeWidth="8" />
-          <text x="50%" y="54%" textAnchor="middle" fill="#1c69d4" fontSize="32" fontWeight="bold" fontFamily="Arial" dy=".3em">BMW</text>
-        </svg>
-        <div style={{ marginTop: 24, fontSize: 28, color: '#1c69d4', fontWeight: 'bold', fontFamily: 'Arial' }}>
-          <span style={{ animation: 'stamp 0.7s cubic-bezier(.36,2,.6,1) forwards' }}>STAMPED!</span>
-        </div>
-        <style>{`
-          @keyframes stamp {
-            0% { opacity: 0; transform: scale(2) rotate(-10deg); }
-            60% { opacity: 1; transform: scale(1.1) rotate(2deg); }
-            100% { opacity: 1; transform: scale(1) rotate(0deg); }
-          }
-        `}</style>
-      </div>
+      <lottie-player
+        autoplay
+        src="https://embed.lottiefiles.com/animation/bdfd649b-cd1e-4ff8-8e8f-5c253b19401d"
+        style={{ width: 300, height: 300 }}
+      />
     </div>
   );
 };
@@ -40,13 +28,17 @@ const LocationPage = () => {
   const { id } = useParams();
   const [location, setLocation] = useState(null);
   const [error, setError] = useState('');
-  const [showAnimation, setShowAnimation] = useState(true);
+  const [showAnimation, setShowAnimation] = useState(() => !Cookies.get(`stamp_location_${id}`));
   const [showFirstNamePrompt, setShowFirstNamePrompt] = useState(false);
   const [showEmailPrompt, setShowEmailPrompt] = useState(false);
   const [firstName, setFirstName] = useState(Cookies.get('first_name') || '');
   const [email, setEmail] = useState(Cookies.get('email') || '');
   const [firstNameInput, setFirstNameInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
+
+  useEffect(() => {
+    setShowAnimation(!Cookies.get(`stamp_location_${id}`));
+  }, [id]);
 
   useEffect(() => {
     if (id) {
