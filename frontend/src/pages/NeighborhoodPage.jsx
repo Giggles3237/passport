@@ -256,22 +256,9 @@ const NEIGHBORHOODS = {
         reviews: 'https://www.yelp.com/biz/mercurios-shadyside-pittsburgh'
       }
     ],
-    next: {
-      slug: 'regent_square',
-      label: 'Continue to Regent Square',
-      text: `Complete your journey through Pittsburgh's vibrant neighborhoods by heading to Regent Square, where nature and community create a charming urban oasis.`
-    }
   },
 
-  regent_square: {
-    /* (unchanged) */
-    /* ... */
-  }
 };
-
-/* ------------------------------------------------------------------
-   PASSPORT STAMP ANIMATION – unchanged
-   ------------------------------------------------------------------ */
 const PassportStampAnimation = ({ onDone }) => {
   useEffect(() => {
     const timer = setTimeout(onDone, 2000);
