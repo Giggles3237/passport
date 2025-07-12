@@ -9,6 +9,7 @@ const MyPassportPage = () => {
   const [stamps, setStamps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [firstName, setFirstName] = useState(Cookies.get('first_name') || '');
 
   useEffect(() => {
     const user_id = Cookies.get('user_id');
@@ -25,6 +26,11 @@ const MyPassportPage = () => {
         } else {
           setUser(data.user);
           setStamps(data.stamps);
+          if (!firstName && data.user && data.user.name) {
+            const fn = data.user.name.split(' ')[0];
+            setFirstName(fn);
+            Cookies.set('first_name', fn, { expires: 365 });
+          }
         }
         setLoading(false);
       })
@@ -60,8 +66,13 @@ const MyPassportPage = () => {
         </>
       ) : (
         <>
+          {firstName && (
+            <div style={{ fontSize: 22, color: '#1c69d4', textAlign: 'center', marginBottom: 16 }}>
+              Welcome back, {firstName}!
+            </div>
+          )}
           <div style={{ marginBottom: 24 }}>
-            <strong>Name:</strong> {user?.name}<br />
+            <strong>Name:</strong> {firstName || user?.name}<br />
             <strong>Email:</strong> {user?.email}<br />
             <strong>Store ID:</strong> {user?.store_id}
           </div>
