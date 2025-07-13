@@ -270,24 +270,11 @@ const PassportStampAnimation = ({ onDone }) => {
       background: 'rgba(255,255,255,0.95)', zIndex: 1000, display: 'flex',
       alignItems: 'center', justifyContent: 'center', transition: 'opacity 0.5s'
     }}>
-      <div style={{ textAlign: 'center' }}>
-        <svg width="160" height="160" viewBox="0 0 160 160">
-          <circle cx="80" cy="80" r="70" fill="#fff" stroke="#1c69d4" strokeWidth="8" />
-          <text x="50%" y="54%" textAnchor="middle" fill="#1c69d4"
-            fontSize="32" fontWeight="bold" fontFamily="Arial" dy=".3em">BMW</text>
-        </svg>
-        <div style={{ marginTop: 24, fontSize: 28, color: '#1c69d4',
-          fontWeight: 'bold', fontFamily: 'Arial' }}>
-          <span style={{ animation: 'stamp 0.7s cubic-bezier(.36,2,.6,1) forwards' }}>STAMPED!</span>
-        </div>
-        <style>{`
-          @keyframes stamp {
-            0% { opacity: 0; transform: scale(2) rotate(-10deg); }
-            60% { opacity: 1; transform: scale(1.1) rotate(2deg); }
-            100% { opacity: 1; transform: scale(1) rotate(0deg); }
-          }
-        `}</style>
-      </div>
+      <lottie-player
+        autoplay
+        src="/assets/images/visa_lottie"
+        style={{ width: 300, height: 300 }}
+      />
     </div>
   );
 };
