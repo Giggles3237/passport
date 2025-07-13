@@ -328,11 +328,75 @@ const NeighborhoodPage = () => {
 
       {/* hide content behind animation */}
       <div style={{ display: showAnimation ? 'none' : 'block' }}>
-        {/* Event Title + Hero unchanged ... */}
+        {/* Hero Section */}
+        <section
+          style={{
+            backgroundImage: `url(${n.hero})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            color: '#fff',
+            textAlign: 'center',
+            padding: '120px 16px',
+          }}
+        >
+          {/* Placeholder for a location-specific logo */}
+          <div
+            style={{
+              width: 120,
+              height: 120,
+              margin: '0 auto 16px',
+              background: 'rgba(255,255,255,0.7)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#1c69d4',
+              borderRadius: '50%',
+            }}
+          >
+            [Location Logo]
+          </div>
+          <h1 style={{ margin: 0 }}>{n.title}</h1>
+          <p style={{ fontSize: 20 }}>{n.tagline}</p>
+        </section>
 
         {/* Info Section */}
         <section style={{ maxWidth: 800, margin: '0 auto', padding: 32 }}>
-          {/* Welcome, about, features (unchanged) */}
+          <h2 style={{ color: '#1c69d4' }}>{n.welcome}</h2>
+          <p style={{ fontSize: 18, marginBottom: 24 }}>{n.intro}</p>
+          {n.featureImg && (
+            <img
+              src={n.featureImg}
+              alt={`${n.title} feature`}
+              style={{ width: '100%', borderRadius: 8, marginBottom: 24 }}
+            />
+          )}
+          <h3 style={{ color: '#1c69d4', marginTop: 0 }}>About {n.title}</h3>
+          <p style={{ marginBottom: 32 }}>{n.about}</p>
+          {n.features && n.features.length > 0 && (
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: 24,
+                marginBottom: 32,
+              }}
+            >
+              {n.features.map((f, idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    flex: '1 1 250px',
+                    background: '#f4f8fb',
+                    padding: 16,
+                    borderRadius: 8,
+                  }}
+                >
+                  <h4 style={{ color: '#1c69d4', margin: '0 0 8px' }}>{f.title}</h4>
+                  <p style={{ margin: 0 }}>{f.text}</p>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* -------------- NEW FOOD SECTION -------------- */}
           {n.restaurants && n.restaurants.length > 0 && (
@@ -380,13 +444,76 @@ const NeighborhoodPage = () => {
             </section>
           )}
 
-          {/* Next-location card unchanged ... */}
+          {n.next && (
+            <section
+              style={{
+                margin: '48px 0',
+                background: '#f4f8fb',
+                padding: 24,
+                borderRadius: 8,
+                textAlign: 'center',
+              }}
+            >
+              <h3 style={{ color: '#1c69d4', marginBottom: 12 }}>
+                Your Next Destination
+              </h3>
+              <p style={{ marginBottom: 16 }}>{n.next.text}</p>
+              <Link
+                to={`/location/${n.next.slug}`}
+                style={{
+                  background: '#1c69d4',
+                  color: '#fff',
+                  padding: '10px 24px',
+                  borderRadius: 6,
+                  textDecoration: 'none',
+                  fontWeight: 'bold',
+                }}
+              >
+                {n.next.label}
+              </Link>
+            </section>
+          )}
         </section>
-
-        {/* BMW branding unchanged ... */}
+        {/* BMW Branding */}
+        <section
+          style={{
+            background: '#f4f8fb',
+            textAlign: 'center',
+            padding: '48px 16px',
+          }}
+        >
+          <img
+            src={bmwLogo}
+            alt="BMW logo"
+            style={{ width: 100, marginBottom: 16 }}
+          />
+          {/* Placeholder for event/partner logo */}
+          <div
+            style={{
+              width: 120,
+              height: 60,
+              margin: '0 auto 16px',
+              background: '#fff',
+              border: '1px dashed #ccc',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#888',
+            }}
+          >
+            [Partner Logo]
+          </div>
+          <div style={{ fontSize: 18, color: '#1c69d4', marginBottom: 8 }}>
+            Sheer Driving Pleasure
+          </div>
+          <p style={{ maxWidth: 600, margin: '0 auto', color: '#000' }}>
+            BMW is proud to sponsor this digital passport experience across
+            Pittsburgh's most vibrant neighborhoods. Explore each stop, collect
+            your stamps and enjoy the journey.
+          </p>
+        </section>
       </div>
 
-      {/* Prompts unchanged ... */}
     </div>
   );
 };
