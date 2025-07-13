@@ -17,7 +17,7 @@ const PassportStampAnimation = ({ onDone }) => {
     }}>
       <lottie-player
         autoplay
-        src="https://embed.lottiefiles.com/animation/bdfd649b-cd1e-4ff8-8e8f-5c253b19401d"
+        src="/assets/images/visa_lottie"
         style={{ width: 300, height: 300 }}
       />
     </div>
