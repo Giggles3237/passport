@@ -4,6 +4,7 @@ import NeighborhoodPage from './pages/NeighborhoodPage';
 import RegisterPage from './pages/RegisterPage';
 import MyPassportPage from './pages/MyPassportPage';
 import AdminPage from './pages/AdminPage';
+import OfficialRulesPage from './pages/OfficialRulesPage';
 import CookieBanner from './components/CookieBanner';
 import './App.css';
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/my-passport" element={<MyPassportPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/official-rules" element={<OfficialRulesPage />} />
         <Route path="*" element={<Navigate to="/location/lawrenceville" replace />} />
       </Routes>
       <CookieBanner />

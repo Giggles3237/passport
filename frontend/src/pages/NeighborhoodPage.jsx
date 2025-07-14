@@ -498,6 +498,11 @@ const NeighborhoodPage = () => {
             Pittsburgh's most vibrant neighborhoods. Explore each stop, collect
             your stamps and enjoy the journey.
           </p>
+          <p style={{ marginTop: 16 }}>
+            <Link to="/official-rules" style={{ color: '#1c69d4' }}>
+              Official Rules
+            </Link>
+          </p>
         </section>
       </div>
 
