@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import { setCookieIfConsented } from '../cookieUtils';
 import bmwLogo from '../assets/bmw-logo.svg';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
@@ -50,9 +51,9 @@ const LocationPage = () => {
             setError(data.error);
           } else {
             setLocation(data);
-            Cookies.set(`stamp_location_${id}`, 'true', { expires: 365 });
+            setCookieIfConsented(`stamp_location_${id}`, 'true', { expires: 365 });
             if (data.store_id) {
-              Cookies.set('store_id', data.store_id, { expires: 365 });
+              setCookieIfConsented('store_id', data.store_id, { expires: 365 });
             }
           }
         })
@@ -75,7 +76,7 @@ const LocationPage = () => {
   const handleFirstNameSubmit = (e) => {
     e.preventDefault();
     if (firstNameInput.trim()) {
-      Cookies.set('first_name', firstNameInput.trim(), { expires: 365 });
+      setCookieIfConsented('first_name', firstNameInput.trim(), { expires: 365 });
       setFirstName(firstNameInput.trim());
       setShowFirstNamePrompt(false);
     }
@@ -84,7 +85,7 @@ const LocationPage = () => {
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     if (emailInput.trim()) {
-      Cookies.set('email', emailInput.trim(), { expires: 365 });
+      setCookieIfConsented('email', emailInput.trim(), { expires: 365 });
       setEmail(emailInput.trim());
       setShowEmailPrompt(false);
       // Register user
@@ -99,7 +100,7 @@ const LocationPage = () => {
         });
         const data = await res.json();
         if (data.user_id) {
-          Cookies.set('user_id', data.user_id, { expires: 365 });
+          setCookieIfConsented('user_id', data.user_id, { expires: 365 });
         }
       } catch {}
     }

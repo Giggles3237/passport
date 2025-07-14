@@ -8,6 +8,7 @@ A scalable, BMW-branded digital passport experience for customer engagement and 
 - "My Passport" page shows collected stamps and user info
 - Multi-store support for different BMW locations/events
 - BMW branding: logo, colors, fonts
+- Cookie consent banner with option to opt out
 
 ## Tech Stack
 - **Frontend:** React (Vite)

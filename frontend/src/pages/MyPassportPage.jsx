@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
+import { setCookieIfConsented } from '../cookieUtils';
 import bmwLogo from '../assets/bmw-logo.svg';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
@@ -29,7 +30,7 @@ const MyPassportPage = () => {
           if (!firstName && data.user && data.user.name) {
             const fn = data.user.name.split(' ')[0];
             setFirstName(fn);
-            Cookies.set('first_name', fn, { expires: 365 });
+            setCookieIfConsented('first_name', fn, { expires: 365 });
           }
         }
         setLoading(false);
