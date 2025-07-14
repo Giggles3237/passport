@@ -4,6 +4,7 @@ import NeighborhoodPage from './pages/NeighborhoodPage';
 import RegisterPage from './pages/RegisterPage';
 import MyPassportPage from './pages/MyPassportPage';
 import AdminPage from './pages/AdminPage';
+import CookieBanner from './components/CookieBanner';
 import './App.css';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
         <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/location/lawrenceville" replace />} />
       </Routes>
+      <CookieBanner />
     </Router>
   );
 }

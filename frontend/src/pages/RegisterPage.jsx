@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
+import { setCookieIfConsented } from '../cookieUtils';
 import bmwLogo from '../assets/bmw-logo.svg';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
@@ -32,7 +33,7 @@ const RegisterPage = () => {
       });
       const data = await res.json();
       if (res.ok) {
-        Cookies.set('user_id', data.user_id, { expires: 365 });
+        setCookieIfConsented('user_id', data.user_id, { expires: 365 });
         setSuccess(true);
       } else {
         setError(data.error || 'Registration failed');
