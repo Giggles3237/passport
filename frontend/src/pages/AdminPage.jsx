@@ -32,6 +32,9 @@ const AdminPage = () => {
   return (
     <div style={{ maxWidth: 900, margin: '2rem auto', background: '#fff', padding: 32, borderRadius: 12, boxShadow: '0 2px 8px #eee', color: '#000' }}>
       <h1 style={{ color: '#1c69d4', marginBottom: 24 }}>Admin Dashboard</h1>
+      <p style={{ fontSize: 14, color: '#1c69d4', fontWeight: 'bold', marginBottom: 24 }}>
+        Contest progress overview
+      </p>
       <h2 style={{ color: '#222', fontSize: 22, marginBottom: 16 }}>Stats</h2>
       <ul style={{ fontSize: 18, marginBottom: 24, color: '#000' }}>
         <li><strong>Total Users:</strong> {stats.user_count}</li>
