@@ -3,6 +3,14 @@ import Cookies from 'js-cookie';
 import { setCookieIfConsented } from '../cookieUtils';
 import bmwLogo from '../assets/bmw-logo.svg';
 
+const STAMP_IMAGES = {
+  Lawrenceville: '/assets/stamps/lawrenceville.svg',
+  'Strip District': '/assets/stamps/strip_district.svg',
+  Downtown: '/assets/stamps/downtown.svg',
+  Bloomfield: '/assets/stamps/bloomfield.svg',
+  Shadyside: '/assets/stamps/shadyside.svg',
+};
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 const MyPassportPage = () => {
@@ -82,15 +90,35 @@ const MyPassportPage = () => {
             {collectedStamps.length === 0 && <li>No stamps collected yet.</li>}
             {collectedStamps.map(id => {
               const dbStamp = stamps.find(s => String(s.location_id) === id);
+              const imgSrc = dbStamp ? STAMP_IMAGES[dbStamp.location_name] : null;
               return (
-                <li key={id} style={{ marginBottom: 12, padding: 8, background: '#f4f8fb', borderRadius: 6 }}>
-                  <span role="img" aria-label="stamp">📍</span> Location {id}
-                  {dbStamp && dbStamp.location_name && (
-                    <> - <strong>{dbStamp.location_name}</strong></>
+                <li
+                  key={id}
+                  style={{
+                    marginBottom: 12,
+                    padding: 8,
+                    background: '#f4f8fb',
+                    borderRadius: 6,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 12,
+                  }}
+                >
+                  {imgSrc && (
+                    <img
+                      src={imgSrc}
+                      alt={dbStamp.location_name}
+                      style={{ width: 80 }}
+                    />
                   )}
-                  {dbStamp && dbStamp.timestamp && (
-                    <div style={{ fontSize: 12, color: '#888' }}>Visited: {new Date(dbStamp.timestamp).toLocaleString()}</div>
-                  )}
+                  <div>
+                    <strong>{dbStamp ? dbStamp.location_name : `Location ${id}`}</strong>
+                    {dbStamp && dbStamp.timestamp && (
+                      <div style={{ fontSize: 12, color: '#888' }}>
+                        Visited: {new Date(dbStamp.timestamp).toLocaleString()}
+                      </div>
+                    )}
+                  </div>
                 </li>
               );
             })}

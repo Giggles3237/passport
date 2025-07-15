@@ -11,6 +11,8 @@ const NEIGHBORHOODS = {
   lawrenceville: {
     title: 'Lawrenceville',
     hero: '/assets/images/neighborhoods/lawrenceville_hero.jpg',
+    logo: '/assets/images/location_logos/lawrenceville_icon.jpg',
+    lottie: '/assets/lotties/Lawrenceville Stamp.json',
     tagline: 'Where History Meets Innovation',
     welcome: 'Welcome to Lawrenceville',
     intro: `Discover one of Pittsburgh's oldest and most vibrant neighborhoods, where historic charm meets contemporary creativity. Located less than three miles from Downtown Pittsburgh, Lawrenceville has transformed from its industrial roots into a thriving cultural hub.`,
@@ -48,7 +50,7 @@ const NEIGHBORHOODS = {
       },
       {
         name: 'Parlor Dim Sum',
-        image: '/assets/images/restaurants/parlor_dim_sum.jpg',
+        image: '/assets/images/restaurants/parlor_dimsum.jpg',
         description:
           'Chef Roger Li’s modern Cantonese spot for late-night dim sum, cocktails and Cantonese BBQ – think “little Hong Kong” on Butler St.',
         website: 'https://theparlordimsum.com',
@@ -57,7 +59,7 @@ const NEIGHBORHOODS = {
       },
       {
         name: "Burgh'ers Brewing",
-        image: '/assets/images/restaurants/burghers_brewing.jpg',
+        image: '/assets/images/restaurants/burghers.jpg',
         description:
           'Chef-driven smash-burger joint & craft brewery focused on local, ethical and sustainable beef & beer.',
         website: 'https://burgherspgh.com/lawrenceville',
@@ -75,6 +77,8 @@ const NEIGHBORHOODS = {
   strip_district: {
     title: 'Strip District',
     hero: '/assets/images/neighborhoods/strip_district_hero.jpg',
+    logo: '/assets/images/location_logos/stripdistrict_icon.jpg',
+    lottie: '/assets/lotties/Strip District Stamp.json',
     tagline: 'Where Industry Meets Culinary Excellence',
     welcome: 'Welcome to the Strip District',
     intro: `Nestled along the Allegheny River, the Strip District blends Pittsburgh’s past with its foodie present. Warehouses now house bustling markets, tech offices, cafés and destination restaurants.`,
@@ -98,7 +102,7 @@ const NEIGHBORHOODS = {
       },
       {
         name: 'De Fer Coffee & Tea',
-        image: '/assets/images/restaurants/de_fer.jpg',
+        image: '/assets/images/restaurants/defer_coffee.jpg',
         description:
           'Flagship roastery-café pouring single-origin coffee, tea, natural wine and craft cocktails – plus weekend live music – inside a lofty Smallman St. space.',
         website: 'https://www.defer.coffee/strip-district',
@@ -116,6 +120,8 @@ const NEIGHBORHOODS = {
   downtown: {
     title: 'Downtown',
     hero: '/assets/images/neighborhoods/downtown_hero.jpg',
+    logo: '/assets/images/location_logos/downtown_icon.jpg',
+    lottie: '/assets/lotties/Downtown Stamp.json',
     tagline: 'The Heart of Pittsburgh',
     welcome: 'Welcome to Downtown',
     intro: `Explore the Golden Triangle where skyscrapers meet three rivers, theater marquis glow and new restaurants pop up next to century-old landmarks.`,
@@ -166,6 +172,8 @@ const NEIGHBORHOODS = {
   bloomfield: {
     title: 'Bloomfield',
     hero: '/assets/images/neighborhoods/bloomfield_hero.jpg',
+    logo: '/assets/images/location_logos/bloomfield_icon.jpg',
+    lottie: '/assets/lotties/Bloomfield Stamp.json',
     tagline: `Pittsburgh's Little Italy`,
     welcome: 'Welcome to Bloomfield',
     intro: `Discover Bloomfield, a neighborhood where old-school Italian red-sauce joints share the block with buzzy new cocktail bars and international kitchens.`,
@@ -180,7 +188,7 @@ const NEIGHBORHOODS = {
     restaurants: [
       {
         name: "Khalil's",
-        image: '/assets/images/restaurants/khalils.jpg',
+        image: '/assets/images/restaurants/khalils.avif',
         description:
           'Family-run Syrian restaurant (since 1972) serving mezze platters, kebabs and legendary house-baked pita in an ornately tiled dining room.',
         website: 'https://khalilsrestaurant.com',
@@ -207,6 +215,8 @@ const NEIGHBORHOODS = {
   shadyside: {
     title: 'Shadyside',
     hero: '/assets/images/neighborhoods/shadyside_hero.jpg',
+    logo: '/assets/images/location_logos/shadyside_icon.jpg',
+    lottie: '/assets/lotties/Shadyside Stamp.json',
     tagline: 'Historic Elegance Meets Modern Luxury',
     welcome: 'Welcome to Shadyside',
     intro: `Tree-lined streets, Victorian mansions and three boutique shopping districts make Shadyside an East-End favorite.`,
@@ -259,7 +269,7 @@ const NEIGHBORHOODS = {
   },
 
 };
-const PassportStampAnimation = ({ onDone }) => {
+const PassportStampAnimation = ({ onDone, src }) => {
   useEffect(() => {
     const timer = setTimeout(onDone, 2000);
     return () => clearTimeout(timer);
@@ -272,7 +282,7 @@ const PassportStampAnimation = ({ onDone }) => {
     }}>
       <lottie-player
         autoplay
-        src="/assets/images/visa_lottie"
+        src={src || '/assets/images/visa_lottie'}
         style={{ width: 300, height: 300 }}
       />
     </div>
@@ -311,7 +321,12 @@ const NeighborhoodPage = () => {
         textDecoration: 'none', boxShadow: '0 2px 8px #eee'
       }}>My Passport</Link>
 
-      {showAnimation && <PassportStampAnimation onDone={() => setShowAnimation(false)} />}
+      {showAnimation && (
+        <PassportStampAnimation
+          onDone={() => setShowAnimation(false)}
+          src={n.lottie}
+        />
+      )}
 
       {/* hide content behind animation */}
       <div style={{ display: showAnimation ? 'none' : 'block' }}>
@@ -327,21 +342,20 @@ const NeighborhoodPage = () => {
           }}
         >
           {/* Placeholder for a location-specific logo */}
-          <div
-            style={{
-              width: 120,
-              height: 120,
-              margin: '0 auto 16px',
-              background: 'rgba(255,255,255,0.7)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#1c69d4',
-              borderRadius: '50%',
-            }}
-          >
-            [Location Logo]
-          </div>
+          {n.logo && (
+            <img
+              src={n.logo}
+              alt={`${n.title} logo`}
+              style={{
+                width: 120,
+                height: 120,
+                margin: '0 auto 16px',
+                borderRadius: '50%',
+                objectFit: 'cover',
+                background: '#fff',
+              }}
+            />
+          )}
           <h1 style={{ margin: 0 }}>{n.title}</h1>
           <p style={{ fontSize: 20 }}>{n.tagline}</p>
         </section>

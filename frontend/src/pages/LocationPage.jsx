@@ -4,9 +4,17 @@ import Cookies from 'js-cookie';
 import { setCookieIfConsented } from '../cookieUtils';
 import bmwLogo from '../assets/bmw-logo.svg';
 
+const LOTTIE_MAP = {
+  Lawrenceville: '/assets/lotties/Lawrenceville Stamp.json',
+  'Strip District': '/assets/lotties/Strip District Stamp.json',
+  Downtown: '/assets/lotties/Downtown Stamp.json',
+  Bloomfield: '/assets/lotties/Bloomfield Stamp.json',
+  Shadyside: '/assets/lotties/Shadyside Stamp.json',
+};
+
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
-const PassportStampAnimation = ({ onDone }) => {
+const PassportStampAnimation = ({ onDone, src }) => {
   useEffect(() => {
     const timer = setTimeout(onDone, 3000);
     return () => clearTimeout(timer);
@@ -18,7 +26,7 @@ const PassportStampAnimation = ({ onDone }) => {
     }}>
       <lottie-player
         autoplay
-        src="/assets/images/visa_lottie"
+        src={src || '/assets/images/visa_lottie'}
         style={{ width: 300, height: 300 }}
       />
     </div>
@@ -112,7 +120,12 @@ const LocationPage = () => {
 
   return (
     <div style={{ textAlign: 'center', padding: '2rem', background: '#fff', minHeight: '100vh' }}>
-      {showAnimation && <PassportStampAnimation onDone={() => setShowAnimation(false)} />}
+      {showAnimation && (
+        <PassportStampAnimation
+          onDone={() => setShowAnimation(false)}
+          src={location ? LOTTIE_MAP[location.name] : undefined}
+        />
+      )}
       {!showAnimation && (
         <>
           <img src={bmwLogo} alt="BMW Logo" style={{ width: 100, marginBottom: 24 }} />
