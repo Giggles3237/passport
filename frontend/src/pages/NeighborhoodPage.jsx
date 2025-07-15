@@ -271,7 +271,7 @@ const NEIGHBORHOODS = {
 };
 const PassportStampAnimation = ({ onDone, src }) => {
   useEffect(() => {
-    const timer = setTimeout(onDone, 2000);
+    const timer = setTimeout(onDone, 4000); // increased from 2s to 4s
     return () => clearTimeout(timer);
   }, [onDone]);
   return (

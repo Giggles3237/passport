@@ -16,7 +16,7 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
 const PassportStampAnimation = ({ onDone, src }) => {
   useEffect(() => {
-    const timer = setTimeout(onDone, 3000);
+    const timer = setTimeout(onDone, 5000); // increased from 3s to 5s
     return () => clearTimeout(timer);
   }, [onDone]);
   return (
