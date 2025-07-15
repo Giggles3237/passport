@@ -364,6 +364,9 @@ const NeighborhoodPage = () => {
         <section style={{ maxWidth: 800, margin: '0 auto', padding: 32 }}>
           <h2 style={{ color: '#1c69d4' }}>{n.welcome}</h2>
           <p style={{ fontSize: 18, marginBottom: 24 }}>{n.intro}</p>
+          <p style={{ fontSize: 16, color: '#1c69d4', fontWeight: 'bold', marginBottom: 24 }}>
+            Collect all stamps to enter our BMW "How to Pittsburgh" contest!
+          </p>
           {n.featureImg && (
             <img
               src={n.featureImg}
@@ -445,35 +448,6 @@ const NeighborhoodPage = () => {
             </section>
           )}
 
-          {n.next && (
-            <section
-              style={{
-                margin: '48px 0',
-                background: '#f4f8fb',
-                padding: 24,
-                borderRadius: 8,
-                textAlign: 'center',
-              }}
-            >
-              <h3 style={{ color: '#1c69d4', marginBottom: 12 }}>
-                Your Next Destination
-              </h3>
-              <p style={{ marginBottom: 16 }}>{n.next.text}</p>
-              <Link
-                to={`/location/${n.next.slug}`}
-                style={{
-                  background: '#1c69d4',
-                  color: '#fff',
-                  padding: '10px 24px',
-                  borderRadius: 6,
-                  textDecoration: 'none',
-                  fontWeight: 'bold',
-                }}
-              >
-                {n.next.label}
-              </Link>
-            </section>
-          )}
         </section>
         {/* BMW Branding */}
         <section

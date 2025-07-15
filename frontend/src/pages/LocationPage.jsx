@@ -135,6 +135,9 @@ const LocationPage = () => {
           {firstName && <div style={{ fontSize: 22, color: '#1c69d4', marginBottom: 12 }}>Welcome back, {firstName}!</div>}
           <p style={{ fontSize: 18 }}>You just collected a digital stamp for your passport.</p>
           <p style={{ color: '#888' }}>Scan more QR codes at other locations to collect more stamps.</p>
+          <p style={{ color: '#1c69d4', fontWeight: 'bold' }}>
+            Complete your passport for a chance to win our BMW contest!
+          </p>
         </>
       )}
       {/* First Name Prompt */}
