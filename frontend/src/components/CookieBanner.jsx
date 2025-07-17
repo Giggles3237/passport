@@ -38,6 +38,12 @@ const CookieBanner = () => {
 
   const accept = () => {
     Cookies.set('cookie_consent', 'true', { expires: 365 });
+    // If on a location page, set the stamp cookie for the current slug
+    const match = window.location.pathname.match(/^\/location\/([^/]+)/);
+    if (match) {
+      const slug = match[1];
+      Cookies.set(`stamp_location_${slug}`, 'true', { expires: 365 });
+    }
     setVisible(false);
   };
 

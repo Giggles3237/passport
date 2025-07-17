@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { setCookieIfConsented } from '../cookieUtils';
-import bmwLogo from '../assets/bmw-logo.svg';
+import logo from '../assets/logo.svg';
 
 const LOTTIE_MAP = {
   Lawrenceville: '/assets/lotties/Lawrenceville Stamp.json',
@@ -34,10 +34,10 @@ const PassportStampAnimation = ({ onDone, src }) => {
 };
 
 const LocationPage = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [location, setLocation] = useState(null);
   const [error, setError] = useState('');
-  const [showAnimation, setShowAnimation] = useState(() => !Cookies.get(`stamp_location_${id}`));
+  const [showAnimation, setShowAnimation] = useState(() => !Cookies.get(`stamp_location_${slug}`));
   const [showFirstNamePrompt, setShowFirstNamePrompt] = useState(false);
   const [showEmailPrompt, setShowEmailPrompt] = useState(false);
   const [firstName, setFirstName] = useState(Cookies.get('first_name') || '');
@@ -46,20 +46,20 @@ const LocationPage = () => {
   const [emailInput, setEmailInput] = useState('');
 
   useEffect(() => {
-    setShowAnimation(!Cookies.get(`stamp_location_${id}`));
-  }, [id]);
+    setShowAnimation(!Cookies.get(`stamp_location_${slug}`));
+  }, [slug]);
 
   useEffect(() => {
-    if (id) {
+    if (slug) {
       // Fetch location info and set cookies
-      fetch(`${API_URL}/location/${id}`)
+      fetch(`${API_URL}/location/${slug}`)
         .then(res => res.json())
         .then(data => {
           if (data.error) {
             setError(data.error);
           } else {
             setLocation(data);
-            setCookieIfConsented(`stamp_location_${id}`, 'true', { expires: 365 });
+            setCookieIfConsented(`stamp_location_${slug}`, 'true', { expires: 365 });
             if (data.store_id) {
               setCookieIfConsented('store_id', data.store_id, { expires: 365 });
             }
@@ -67,7 +67,7 @@ const LocationPage = () => {
         })
         .catch(() => setError('Network error'));
     }
-  }, [id]);
+  }, [slug]);
 
   useEffect(() => {
     if (!showAnimation) {
@@ -110,7 +110,9 @@ const LocationPage = () => {
         if (data.user_id) {
           setCookieIfConsented('user_id', data.user_id, { expires: 365 });
         }
-      } catch {}
+      } catch {
+        // Intentionally ignore registration errors here
+      }
     }
   };
 
@@ -128,7 +130,7 @@ const LocationPage = () => {
       )}
       {!showAnimation && (
         <>
-          <img src={bmwLogo} alt="BMW Logo" style={{ width: 100, marginBottom: 24 }} />
+          <img src={logo} alt="Logo" style={{ width: 140, marginBottom: 24 }} />
           <h1 style={{ color: '#1c69d4', fontFamily: 'Arial, Helvetica, sans-serif' }}>
             {location ? `Welcome to ${location.name}!` : 'Loading...'}
           </h1>

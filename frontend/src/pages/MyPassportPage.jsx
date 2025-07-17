@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { setCookieIfConsented } from '../cookieUtils';
-import bmwLogo from '../assets/bmw-logo.svg';
+import logo from '../assets/logo.svg';
 
 const STAMP_IMAGES = {
   Lawrenceville: '/assets/stamps/lawrenceville.svg',
@@ -13,9 +13,33 @@ const STAMP_IMAGES = {
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
-const MyPassportPage = () => {
+const BLUE = '#1c69d4';
+
+const modalBackdropStyle = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  background: 'rgba(0,0,0,0.4)',
+  zIndex: 4000,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+const modalStyle = {
+  background: '#fff',
+  borderRadius: 12,
+  boxShadow: '0 2px 16px #0002',
+  maxWidth: 500,
+  width: '90vw',
+  padding: 32,
+  position: 'relative',
+};
+
+function MyPassportModal({ onClose }) {
   const [user, setUser] = useState(null);
-  const [stamps, setStamps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [firstName, setFirstName] = useState(Cookies.get('first_name') || '');
@@ -34,7 +58,6 @@ const MyPassportPage = () => {
           setError(data.error);
         } else {
           setUser(data.user);
-          setStamps(data.stamps);
           if (!firstName && data.user && data.user.name) {
             const fn = data.user.name.split(' ')[0];
             setFirstName(fn);
@@ -54,82 +77,108 @@ const MyPassportPage = () => {
     .filter(key => key.startsWith('stamp_location_'))
     .map(key => key.replace('stamp_location_', ''));
 
+  // Map slugs to display names
+  const SLUG_TO_NAME = {
+    lawrenceville: 'Lawrenceville',
+    strip_district: 'Strip District',
+    downtown: 'Downtown',
+    bloomfield: 'Bloomfield',
+    shadyside: 'Shadyside',
+  };
+
+  // Close on backdrop click
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   return (
-    <div style={{ maxWidth: 500, margin: '2rem auto', background: '#fff', padding: 32, borderRadius: 12, boxShadow: '0 2px 8px #eee' }}>
-      <img src={bmwLogo} alt="BMW Logo" style={{ width: 80, display: 'block', margin: '0 auto 24px' }} />
-      <h2 style={{ color: '#1c69d4', textAlign: 'center' }}>My BMW Digital Passport</h2>
-      <p style={{ fontSize: 16, color: '#1c69d4', fontWeight: 'bold', marginBottom: 16, textAlign: 'center' }}>
-        Collect all five stamps to be entered in the BMW contest!
-      </p>
-      {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <>
-          <p style={{ color: 'red' }}>{error}</p>
-          <h3 style={{ color: '#1c69d4' }}>Collected Stamps</h3>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {collectedStamps.length === 0 && <li>No stamps collected yet.</li>}
-            {collectedStamps.map(id => (
-              <li key={id} style={{ marginBottom: 12, padding: 8, background: '#f4f8fb', borderRadius: 6 }}>
-                <span role="img" aria-label="stamp">📍</span> Location {id}
-              </li>
-            ))}
-          </ul>
-        </>
-      ) : (
-        <>
-          {firstName && (
-            <div style={{ fontSize: 22, color: '#1c69d4', textAlign: 'center', marginBottom: 16 }}>
-              Welcome back, {firstName}!
-            </div>
-          )}
-          <div style={{ marginBottom: 24 }}>
-            <strong>Name:</strong> {firstName || user?.name}<br />
-            <strong>Email:</strong> {user?.email}<br />
-            <strong>Store ID:</strong> {user?.store_id}
-          </div>
-          <h3 style={{ color: '#1c69d4' }}>Collected Stamps</h3>
-          <ul style={{ listStyle: 'none', padding: 0 }}>
-            {collectedStamps.length === 0 && <li>No stamps collected yet.</li>}
-            {collectedStamps.map(id => {
-              const dbStamp = stamps.find(s => String(s.location_id) === id);
-              const imgSrc = dbStamp ? STAMP_IMAGES[dbStamp.location_name] : null;
-              return (
-                <li
-                  key={id}
-                  style={{
-                    marginBottom: 12,
-                    padding: 8,
-                    background: '#f4f8fb',
-                    borderRadius: 6,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 12,
-                  }}
-                >
-                  {imgSrc && (
-                    <img
-                      src={imgSrc}
-                      alt={dbStamp.location_name}
-                      style={{ width: 80 }}
-                    />
-                  )}
-                  <div>
-                    <strong>{dbStamp ? dbStamp.location_name : `Location ${id}`}</strong>
-                    {dbStamp && dbStamp.timestamp && (
-                      <div style={{ fontSize: 12, color: '#888' }}>
-                        Visited: {new Date(dbStamp.timestamp).toLocaleString()}
-                      </div>
-                    )}
-                  </div>
+    <div style={modalBackdropStyle} onClick={handleBackdropClick}>
+      <div style={modalStyle}>
+        {/* Close (X) button */}
+        <button
+          onClick={onClose}
+          aria-label="Close passport"
+          style={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            background: 'none',
+            border: 'none',
+            fontSize: 22,
+            color: '#888',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            lineHeight: 1
+          }}
+        >
+          ×
+        </button>
+        <img src={logo} alt="Logo" style={{ width: 120, display: 'block', margin: '0 auto 24px' }} />
+        <h2 style={{ color: '#1c69d4', textAlign: 'center' }}>My BMW Digital Passport</h2>
+        <p style={{ fontSize: 16, color: '#1c69d4', fontWeight: 'bold', marginBottom: 16, textAlign: 'center' }}>
+          Collect all five stamps to be entered in the BMW contest!
+        </p>
+        {loading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <>
+            <p style={{ color: 'red' }}>{error}</p>
+            <h3 style={{ color: '#1c69d4' }}>Collected Stamps</h3>
+            <ul style={{ listStyle: 'none', padding: 0 }}>
+              {collectedStamps.length === 0 && <li>No stamps collected yet.</li>}
+              {collectedStamps.map(id => (
+                <li key={id} style={{ marginBottom: 12, padding: 8, background: '#f4f8fb', borderRadius: 6 }}>
+                  <span role="img" aria-label="stamp">📍</span> Location {id}
                 </li>
-              );
-            })}
-          </ul>
-        </>
-      )}
+              ))}
+            </ul>
+          </>
+        ) : (
+          <>
+            {firstName && (
+              <div style={{ fontSize: 22, color: '#1c69d4', textAlign: 'center', marginBottom: 16 }}>
+                Welcome back, {firstName}!
+              </div>
+            )}
+            <div style={{ marginBottom: 24 }}>
+              <strong>Name:</strong> {firstName || user?.name}<br />
+              <strong>Email:</strong> {user?.email}<br />
+              <strong>Store ID:</strong> {user?.store_id}
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: 8, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', margin: '16px 0' }}>
+              {collectedStamps.length === 0 && <span style={{ color: '#888' }}>No stamps collected yet.</span>}
+              {collectedStamps.map(slug => {
+                const svgPath = `/assets/stamps/${slug}.svg`;
+                return (
+                  <a
+                    key={slug}
+                    href={`/location/${slug}`}
+                    style={{
+                      display: 'inline-block',
+                      border: 'none',
+                      borderRadius: 6,
+                      padding: 2,
+                      background: BLUE,
+                      transition: 'box-shadow 0.2s',
+                    }}
+                    title={slug.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                  >
+                    <img
+                      src={svgPath}
+                      alt={slug}
+                      style={{ width: 110, height: 44, objectFit: 'contain', display: 'block' }}
+                    />
+                  </a>
+                );
+              })}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
-};
+}
 
-export default MyPassportPage; 
+export default MyPassportModal; 

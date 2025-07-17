@@ -2,7 +2,7 @@ import React from 'react';
 
 const OfficialRulesPage = () => (
   <section style={{ fontFamily: 'Arial, sans-serif', lineHeight: 1.6, maxWidth: 800, margin: 'auto', padding: 20 }}>
-    <h1 style={{ color: '#003A70' }}>BMW of Pittsburgh “How to Pittsburgh” Getaway</h1>
+    <h1 style={{ color: '#003A70' }}>BMW of Pittsburgh's “How to Pittsburgh” Getaway</h1>
     <h2 style={{ color: '#666' }}>Official Rules</h2>
     <p><strong>No purchase necessary to enter or win.</strong></p>
     <h3>1. Eligibility</h3>

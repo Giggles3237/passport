@@ -2,7 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import bmwLogo from '../assets/bmw-logo.svg';
+import logo from '../assets/logo.svg';
+import { setCookieIfConsented } from '../cookieUtils';
+import RegisterModal from './RegisterPage';
+import MyPassportModal from './MyPassportPage';
 
 /* ------------------------------------------------------------------
    NEIGHBORHOOD DATA  –  update image paths to match your build setup
@@ -301,6 +304,60 @@ const NeighborhoodPage = () => {
   const [email, setEmail] = useState(Cookies.get('email') || '');
   const [firstNameInput, setFirstNameInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [showPassportModal, setShowPassportModal] = useState(false);
+
+  // --- PROMPT LOGIC (from LocationPage.jsx) ---
+  useEffect(() => {
+    if (!showAnimation) {
+      // Count unique stamps
+      const stampCount = Object.keys(Cookies.get()).filter(k => k.startsWith('stamp_location_')).length;
+      if (!firstName && stampCount === 2) {
+        setShowFirstNamePrompt(true);
+      } else if (!email && (stampCount === 4 || stampCount === 5)) {
+        setShowEmailPrompt(true);
+      }
+    }
+  }, [showAnimation, firstName, email]);
+
+  useEffect(() => {
+    if (slug) {
+      setCookieIfConsented(`stamp_location_${slug}`, 'true', { expires: 365 });
+    }
+  }, [slug]);
+
+  const handleFirstNameSubmit = (e) => {
+    e.preventDefault();
+    if (firstNameInput.trim()) {
+      setCookieIfConsented('first_name', firstNameInput.trim(), { expires: 365 });
+      setFirstName(firstNameInput.trim());
+      setShowFirstNamePrompt(false);
+    }
+  };
+
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
+    if (emailInput.trim()) {
+      setCookieIfConsented('email', emailInput.trim(), { expires: 365 });
+      setEmail(emailInput.trim());
+      setShowEmailPrompt(false);
+      // Register user
+      const name = Cookies.get('first_name');
+      const emailVal = emailInput.trim();
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email: emailVal, store_id: 1 }),
+          credentials: 'include',
+        });
+        const data = await res.json();
+        if (data.user_id) {
+          setCookieIfConsented('user_id', data.user_id, { expires: 365 });
+        }
+      } catch { /* ignore error */ }
+    }
+  };
 
   /* stamp + prompt logic unchanged ... */
 
@@ -313,13 +370,31 @@ const NeighborhoodPage = () => {
 
   return (
     <div style={{ background: '#fff', minHeight: '100vh' }}>
-      {/* My Passport Button */}
-      <Link to="/my-passport" style={{
-        position: 'fixed', top: 24, right: 24, zIndex: 3000,
-        background: '#1c69d4', color: '#fff', padding: '12px 24px',
-        borderRadius: 8, fontWeight: 'bold', fontSize: 16,
-        textDecoration: 'none', boxShadow: '0 2px 8px #eee'
-      }}>My Passport</Link>
+      {/* My Passport Button at the bottom */}
+      <div style={{ display: 'flex', justifyContent: 'center', margin: '48px 0 0 0' }}>
+        <button
+          onClick={() => setShowPassportModal(true)}
+          style={{
+            background: '#fff',
+            color: '#1c69d4',
+            border: '2px solid #1c69d4',
+            borderRadius: 8,
+            fontWeight: 'bold',
+            fontSize: 18,
+            padding: '14px 36px',
+            boxShadow: '0 2px 8px #eee',
+            cursor: 'pointer',
+            marginTop: 0,
+            marginBottom: 0,
+            outline: 'none',
+            transition: 'background 0.2s, color 0.2s',
+          }}
+          aria-label="View My Passport"
+        >
+          My Passport
+        </button>
+      </div>
+      {showPassportModal && <MyPassportModal onClose={() => setShowPassportModal(false)} />}
 
       {showAnimation && (
         <PassportStampAnimation
@@ -330,6 +405,28 @@ const NeighborhoodPage = () => {
 
       {/* hide content behind animation */}
       <div style={{ display: showAnimation ? 'none' : 'block' }}>
+        {/* First Name Prompt */}
+        {showFirstNamePrompt && (
+          <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(255,255,255,0.97)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <form onSubmit={handleFirstNameSubmit} style={{ background: '#fff', padding: 32, borderRadius: 12, boxShadow: '0 2px 8px #eee', textAlign: 'center' }}>
+              <h2 style={{ color: '#1c69d4' }}>So, you have visited us a couple of times, we should really be on a first name basis. What's yours?</h2>
+              <label style={{ fontSize: 18 }}>What's your first name?</label>
+              <input value={firstNameInput} onChange={e => setFirstNameInput(e.target.value)} required style={{ width: '100%', margin: '16px 0', padding: 8, fontSize: 16 }} />
+              <button type="submit" style={{ background: '#1c69d4', color: '#fff', padding: '10px 24px', border: 'none', borderRadius: 6, fontWeight: 'bold', fontSize: 16 }}>Continue</button>
+            </form>
+          </div>
+        )}
+        {/* Email Prompt */}
+        {showEmailPrompt && (
+          <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(255,255,255,0.97)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <form onSubmit={handleEmailSubmit} style={{ background: '#fff', padding: 32, borderRadius: 12, boxShadow: '0 2px 8px #eee', textAlign: 'center' }}>
+              <h2 style={{ color: '#1c69d4' }}>You're almost done! Enter your email to complete your passport and enter the contest.</h2>
+              <label style={{ fontSize: 18 }}>What's your email address?</label>
+              <input type="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} required style={{ width: '100%', margin: '16px 0', padding: 8, fontSize: 16 }} />
+              <button type="submit" style={{ background: '#1c69d4', color: '#fff', padding: '10px 24px', border: 'none', borderRadius: 6, fontWeight: 'bold', fontSize: 16 }}>Submit</button>
+            </form>
+          </div>
+        )}
         {/* Hero Section */}
         <section
           style={{
@@ -341,21 +438,6 @@ const NeighborhoodPage = () => {
             padding: '120px 16px',
           }}
         >
-          {/* Placeholder for a location-specific logo */}
-          {n.logo && (
-            <img
-              src={n.logo}
-              alt={`${n.title} logo`}
-              style={{
-                width: 120,
-                height: 120,
-                margin: '0 auto 16px',
-                borderRadius: '50%',
-                objectFit: 'cover',
-                background: '#fff',
-              }}
-            />
-          )}
           <h1 style={{ margin: 0 }}>{n.title}</h1>
           <p style={{ fontSize: 20 }}>{n.tagline}</p>
         </section>
@@ -364,9 +446,31 @@ const NeighborhoodPage = () => {
         <section style={{ maxWidth: 800, margin: '0 auto', padding: 32 }}>
           <h2 style={{ color: '#1c69d4' }}>{n.welcome}</h2>
           <p style={{ fontSize: 18, marginBottom: 24 }}>{n.intro}</p>
-          <p style={{ fontSize: 16, color: '#1c69d4', fontWeight: 'bold', marginBottom: 24 }}>
-            Collect all stamps to enter our BMW "How to Pittsburgh" contest!
-          </p>
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '32px 0' }}>
+            <button
+              onClick={() => setShowRegisterModal(true)}
+              style={{
+                background: '#1c69d4',
+                color: '#fff',
+                fontWeight: 'bold',
+                fontSize: 24,
+                padding: '24px 48px',
+                border: 'none',
+                borderRadius: 16,
+                boxShadow: '0 4px 24px #1c69d455',
+                cursor: 'pointer',
+                transition: 'transform 0.1s',
+                textShadow: '0 2px 8px #0002',
+                letterSpacing: 1,
+                outline: 'none',
+                margin: 0,
+              }}
+              aria-label="Enter the BMW How To Pittsburgh contest"
+            >
+              Enter the BMW "How To Pittsburgh" Contest
+            </button>
+          </div>
+          {showRegisterModal && <RegisterModal onClose={() => setShowRegisterModal(false)} />}
           {n.featureImg && (
             <img
               src={n.featureImg}
@@ -458,26 +562,10 @@ const NeighborhoodPage = () => {
           }}
         >
           <img
-            src={bmwLogo}
-            alt="BMW logo"
-            style={{ width: 100, marginBottom: 16 }}
+            src={logo}
+            alt="Logo"
+            style={{ width: 140, marginBottom: 16 }}
           />
-          {/* Placeholder for event/partner logo */}
-          <div
-            style={{
-              width: 120,
-              height: 60,
-              margin: '0 auto 16px',
-              background: '#fff',
-              border: '1px dashed #ccc',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#888',
-            }}
-          >
-            [Partner Logo]
-          </div>
           <div style={{ fontSize: 18, color: '#1c69d4', marginBottom: 8 }}>
             Sheer Driving Pleasure
           </div>

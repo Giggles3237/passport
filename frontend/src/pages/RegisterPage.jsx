@@ -1,11 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { setCookieIfConsented } from '../cookieUtils';
-import bmwLogo from '../assets/bmw-logo.svg';
+import logo from '../assets/logo.svg';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
 
-const RegisterPage = () => {
+const modalBackdropStyle = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100vw',
+  height: '100vh',
+  background: 'rgba(0,0,0,0.4)',
+  zIndex: 4000,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+const modalStyle = {
+  background: '#fff',
+  borderRadius: 12,
+  boxShadow: '0 2px 16px #0002',
+  maxWidth: 400,
+  width: '90vw',
+  padding: 32,
+  position: 'relative',
+};
+
+function RegisterModal({ onClose }) {
   const [form, setForm] = useState({ name: '', email: '' });
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -43,52 +66,66 @@ const RegisterPage = () => {
     }
   };
 
-  if (success) {
-    return (
-      <div style={{ textAlign: 'center', padding: '2rem', background: '#fff' }}>
-        <img src={bmwLogo} alt="BMW Logo" style={{ width: 100, marginBottom: 24 }} />
-        <h1 style={{ color: '#1c69d4' }}>Thank you for registering!</h1>
-        <p style={{ fontSize: 18 }}>Your digital passport is now linked to your name and email.</p>
-      </div>
-    );
-  }
-
-  // If both name and email are already collected, show a message and hide the form
-  if (form.name && form.email) {
-    return (
-      <div style={{ textAlign: 'center', padding: '2rem', background: '#fff' }}>
-        <img src={bmwLogo} alt="BMW Logo" style={{ width: 100, marginBottom: 24 }} />
-        <h2 style={{ color: '#1c69d4' }}>You're all set!</h2>
-        <p style={{ fontSize: 18 }}>We already have your name and email. Thank you for participating!</p>
-      </div>
-    );
-  }
+  // Close on backdrop click
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
 
   return (
-    <div style={{ maxWidth: 400, margin: '2rem auto', background: '#fff', padding: 32, borderRadius: 12, boxShadow: '0 2px 8px #eee' }}>
-      <img src={bmwLogo} alt="BMW Logo" style={{ width: 80, display: 'block', margin: '0 auto 24px' }} />
-      <h2 style={{ color: '#1c69d4', textAlign: 'center' }}>Register Your Passport</h2>
-      <p style={{ fontSize: 16, color: '#1c69d4', fontWeight: 'bold', textAlign: 'center', marginBottom: 16 }}>
-        Finish your passport to enter the BMW "How to Pittsburgh" contest!
-      </p>
-      <form onSubmit={handleSubmit}>
-        {!form.name && (
+    <div style={modalBackdropStyle} onClick={handleBackdropClick}>
+      <div style={modalStyle}>
+        {/* Close (X) button */}
+        <button
+          onClick={onClose}
+          aria-label="Close registration"
+          style={{
+            position: 'absolute',
+            top: 12,
+            right: 12,
+            background: 'none',
+            border: 'none',
+            fontSize: 22,
+            color: '#888',
+            cursor: 'pointer',
+            fontWeight: 'bold',
+            lineHeight: 1
+          }}
+        >
+          ×
+        </button>
+        {success ? (
+          <div style={{ textAlign: 'center', padding: '2rem 0', background: '#fff' }}>
+            <img src={logo} alt="Logo" style={{ width: 100, marginBottom: 24 }} />
+            <h1 style={{ color: '#1c69d4' }}>Thank You for Entering!</h1>
+            <p style={{ fontSize: 18 }}></p>
+          </div>
+        ) : (
           <>
-            <label style={{ display: 'block', marginBottom: 8 }}>Name</label>
-            <input name="name" value={form.name} onChange={handleChange} required style={{ width: '100%', marginBottom: 16, padding: 8 }} />
+            <img src={logo} alt="Logo" style={{ width: 80, display: 'block', margin: '0 auto 24px' }} />
+            <h2 style={{ color: '#1c69d4', textAlign: 'center' }}>
+              Enter to Win
+              <a href="/official-rules" style={{ color: '#1c69d4', textDecoration: 'none', fontWeight: 'bold', fontSize: '1em' }}>*</a>
+            </h2>
+            <form onSubmit={handleSubmit}>
+              <label style={{ display: 'block', marginBottom: 8 }}>Name</label>
+              <input name="name" value={form.name} onChange={handleChange} required style={{ width: '100%', marginBottom: 16, padding: 8 }} />
+              <label style={{ display: 'block', marginBottom: 8 }}>Email</label>
+              <input name="email" type="email" value={form.email} onChange={handleChange} required style={{ width: '100%', marginBottom: 16, padding: 8 }} />
+              <button type="submit" style={{ width: '100%', background: '#1c69d4', color: '#fff', padding: 12, border: 'none', borderRadius: 6, fontWeight: 'bold', fontSize: 16 }}>Register</button>
+              {error && <p style={{ color: 'red', marginTop: 12 }}>{error}</p>}
+            </form>
+            <div style={{ textAlign: 'center', marginTop: 16 }}>
+              <a href="/official-rules" style={{ color: '#1c69d4', textDecoration: 'underline', fontSize: 14 }}>
+                Official Rules
+              </a>
+            </div>
           </>
         )}
-        {!form.email && (
-          <>
-            <label style={{ display: 'block', marginBottom: 8 }}>Email</label>
-            <input name="email" type="email" value={form.email} onChange={handleChange} required style={{ width: '100%', marginBottom: 16, padding: 8 }} />
-          </>
-        )}
-        <button type="submit" style={{ width: '100%', background: '#1c69d4', color: '#fff', padding: 12, border: 'none', borderRadius: 6, fontWeight: 'bold', fontSize: 16 }}>Register</button>
-        {error && <p style={{ color: 'red', marginTop: 12 }}>{error}</p>}
-      </form>
+      </div>
     </div>
   );
-};
+}
 
-export default RegisterPage; 
+export default RegisterModal; 
