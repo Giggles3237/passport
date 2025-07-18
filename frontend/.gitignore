@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Admin page (excluded from version control)
+src/pages/AdminPage.jsx

@@ -4,6 +4,7 @@ import { useParams, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import logo from '../assets/logo.svg';
 import { setCookieIfConsented } from '../cookieUtils';
+import visitTracker from '../visitTracker';
 import RegisterModal from './RegisterPage';
 import MyPassportModal from './MyPassportPage';
 
@@ -323,6 +324,8 @@ const NeighborhoodPage = () => {
   useEffect(() => {
     if (slug) {
       setCookieIfConsented(`stamp_location_${slug}`, 'true', { expires: 365 });
+      // Track the visit
+      visitTracker.trackVisit(slug);
     }
   }, [slug]);
 

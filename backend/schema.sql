@@ -27,4 +27,17 @@ CREATE TABLE stamps (
   timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id),
   FOREIGN KEY (location_id) REFERENCES locations(id)
+);
+
+-- New table to track every visit
+CREATE TABLE visits (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  location_id INT,
+  session_id VARCHAR(255), -- Anonymous session identifier
+  user_id CHAR(36) NULL, -- NULL if user not registered
+  ip_address VARCHAR(45), -- IPv4 or IPv6
+  user_agent TEXT,
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (location_id) REFERENCES locations(id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 ); 

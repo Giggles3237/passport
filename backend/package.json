@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "populate-locations": "node scripts/populate-locations.js",
+    "run-schema": "node scripts/run-schema.js"
   },
   "dependencies": {
     "cookie-parser": "^1.4.6",

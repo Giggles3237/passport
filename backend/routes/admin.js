@@ -12,11 +12,23 @@ router.get('/stats', async (req, res) => {
     const [[{ stamp_count }]] = await pool.query('SELECT COUNT(*) as stamp_count FROM stamps');
     // Total locations
     const [[{ location_count }]] = await pool.query('SELECT COUNT(*) as location_count FROM locations');
+    // Total visits
+    const [[{ visit_count }]] = await pool.query('SELECT COUNT(*) as visit_count FROM visits');
+    // Unique visitors (by session)
+    const [[{ unique_visitors }]] = await pool.query('SELECT COUNT(DISTINCT session_id) as unique_visitors FROM visits');
     // Stamps per location
     const [stampsPerLocation] = await pool.query(`
       SELECT l.id, l.name, COUNT(s.id) as stamp_count
       FROM locations l
       LEFT JOIN stamps s ON l.id = s.location_id
+      GROUP BY l.id, l.name
+      ORDER BY l.id
+    `);
+    // Visits per location
+    const [visitsPerLocation] = await pool.query(`
+      SELECT l.id, l.name, COUNT(v.id) as visit_count, COUNT(DISTINCT v.session_id) as unique_visitors
+      FROM locations l
+      LEFT JOIN visits v ON l.id = v.location_id
       GROUP BY l.id, l.name
       ORDER BY l.id
     `);
@@ -27,12 +39,24 @@ router.get('/stats', async (req, res) => {
       GROUP BY DATE(created_at)
       ORDER BY date DESC
     `);
+    // Visits per day
+    const [visitsPerDate] = await pool.query(`
+      SELECT DATE(timestamp) as date, COUNT(*) as count
+      FROM visits
+      GROUP BY DATE(timestamp)
+      ORDER BY date DESC
+      LIMIT 30
+    `);
     res.json({
       user_count,
       stamp_count,
       location_count,
+      visit_count,
+      unique_visitors,
       stamps_per_location: stampsPerLocation,
-      users_per_date: usersPerDate
+      visits_per_location: visitsPerLocation,
+      users_per_date: usersPerDate,
+      visits_per_date: visitsPerDate
     });
   } catch (err) {
     console.error(err);
