@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Cookies from 'js-cookie';
-import { setCookieIfConsented } from '../cookieUtils';
 import logo from '../assets/logo.svg';
 
 const STAMP_IMAGES = {
@@ -39,38 +38,7 @@ const modalStyle = {
 };
 
 function MyPassportModal({ onClose }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [firstName, setFirstName] = useState(Cookies.get('first_name') || '');
-
-  useEffect(() => {
-    const user_id = Cookies.get('user_id');
-    if (!user_id) {
-      setError('User information not found.');
-      setLoading(false);
-      return;
-    }
-    fetch(`${API_URL}/user/${user_id}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setUser(data.user);
-          if (!firstName && data.user && data.user.name) {
-            const fn = data.user.name.split(' ')[0];
-            setFirstName(fn);
-            setCookieIfConsented('first_name', fn, { expires: 365 });
-          }
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        setError('Network error');
-        setLoading(false);
-      });
-  }, []);
+  // Simplified - no user data needed, just show stamps
 
   // Read all stamp cookies
   const collectedStamps = Object.keys(Cookies.get())
@@ -118,64 +86,62 @@ function MyPassportModal({ onClose }) {
         <img src={logo} alt="Logo" style={{ width: 120, display: 'block', margin: '0 auto 24px' }} />
         <h2 style={{ color: '#1c69d4', textAlign: 'center' }}>My BMW Digital Passport</h2>
         <p style={{ fontSize: 16, color: '#1c69d4', fontWeight: 'bold', marginBottom: 16, textAlign: 'center' }}>
-          Collect all five stamps to be entered in the BMW contest!
+          Collect all five!
         </p>
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
           <>
-            <p style={{ color: 'red' }}>{error}</p>
-            <h3 style={{ color: '#1c69d4' }}>Collected Stamps</h3>
-            <ul style={{ listStyle: 'none', padding: 0 }}>
-              {collectedStamps.length === 0 && <li>No stamps collected yet.</li>}
-              {collectedStamps.map(id => (
-                <li key={id} style={{ marginBottom: 12, padding: 8, background: '#f4f8fb', borderRadius: 6 }}>
-                  <span role="img" aria-label="stamp">📍</span> Location {id}
-                </li>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <>
-            {firstName && (
-              <div style={{ fontSize: 22, color: '#1c69d4', textAlign: 'center', marginBottom: 16 }}>
-                Welcome back, {firstName}!
-              </div>
-            )}
-            <div style={{ marginBottom: 24 }}>
-              <strong>Name:</strong> {firstName || user?.name}<br />
-              <strong>Email:</strong> {user?.email}<br />
-              <strong>Store ID:</strong> {user?.store_id}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'center', margin: '16px 0' }}>
+              {collectedStamps.length === 0 ? (
+                <div style={{ textAlign: 'center', color: '#888', padding: '20px' }}>
+                  <p>No stamps collected yet.</p>
+                  <p style={{ fontSize: 14, marginTop: 8 }}>Visit different neighborhoods to collect stamps!</p>
+                </div>
+              ) : (
+                <>
+                  <div style={{ display: 'flex', flexDirection: 'row', gap: 12, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap' }}>
+                    {collectedStamps.map(slug => {
+                      const displayName = SLUG_TO_NAME[slug] || slug.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+                      const svgPath = `/assets/stamps/${slug}.svg`;
+                      return (
+                        <div
+                          key={slug}
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: 8,
+                            padding: 12,
+                            background: '#f4f8fb',
+                            borderRadius: 8,
+                            border: '2px solid #1c69d4',
+                            minWidth: 120
+                          }}
+                        >
+                          <img
+                            src={svgPath}
+                            alt={displayName}
+                            style={{ width: 80, height: 32, objectFit: 'contain' }}
+                          />
+                          <span style={{ fontSize: 12, color: '#1c69d4', fontWeight: 'bold', textAlign: 'center' }}>
+                            {displayName}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div style={{ textAlign: 'center', marginTop: 16 }}>
+                    <p style={{ color: '#1c69d4', fontWeight: 'bold' }}>
+                      {collectedStamps.length} of 5 stamps collected
+                    </p>
+                    {collectedStamps.length === 5 && (
+                      <p style={{ color: '#28a745', fontWeight: 'bold', marginTop: 8 }}>
+                        🎉 Congratulations! You've collected all stamps!
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'row', gap: 8, justifyContent: 'center', alignItems: 'center', flexWrap: 'wrap', margin: '16px 0' }}>
-              {collectedStamps.length === 0 && <span style={{ color: '#888' }}>No stamps collected yet.</span>}
-              {collectedStamps.map(slug => {
-                const svgPath = `/assets/stamps/${slug}.svg`;
-                return (
-                  <a
-                    key={slug}
-                    href={`/location/${slug}`}
-                    style={{
-                      display: 'inline-block',
-                      border: 'none',
-                      borderRadius: 6,
-                      padding: 2,
-                      background: BLUE,
-                      transition: 'box-shadow 0.2s',
-                    }}
-                    title={slug.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                  >
-                    <img
-                      src={svgPath}
-                      alt={slug}
-                      style={{ width: 110, height: 44, objectFit: 'contain', display: 'block' }}
-                    />
-                  </a>
-                );
-              })}
-            </div>
           </>
-        )}
       </div>
     </div>
   );

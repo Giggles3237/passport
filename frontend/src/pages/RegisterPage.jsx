@@ -103,10 +103,9 @@ function RegisterModal({ onClose }) {
           </div>
         ) : (
           <>
-            <img src={logo} alt="Logo" style={{ width: 80, display: 'block', margin: '0 auto 24px' }} />
+            <img src={logo} alt="Logo" style={{ width: 120, display: 'block', margin: '0 auto 24px' }} />
             <h2 style={{ color: '#1c69d4', textAlign: 'center' }}>
               Enter to Win
-              <a href="/official-rules" style={{ color: '#1c69d4', textDecoration: 'none', fontWeight: 'bold', fontSize: '1em' }}>*</a>
             </h2>
             <form onSubmit={handleSubmit}>
               <label style={{ display: 'block', marginBottom: 8 }}>Name</label>

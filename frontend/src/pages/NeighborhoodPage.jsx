@@ -299,68 +299,42 @@ const PassportStampAnimation = ({ onDone, src }) => {
 const NeighborhoodPage = () => {
   const { slug } = useParams();
   const [showAnimation, setShowAnimation] = useState(true);
-  const [showFirstNamePrompt, setShowFirstNamePrompt] = useState(false);
-  const [showEmailPrompt, setShowEmailPrompt] = useState(false);
-  const [firstName, setFirstName] = useState(Cookies.get('first_name') || '');
-  const [email, setEmail] = useState(Cookies.get('email') || '');
-  const [firstNameInput, setFirstNameInput] = useState('');
-  const [emailInput, setEmailInput] = useState('');
   const [showRegisterModal, setShowRegisterModal] = useState(false);
   const [showPassportModal, setShowPassportModal] = useState(false);
+  const [hasShownAutoModal, setHasShownAutoModal] = useState(false);
 
-  // --- PROMPT LOGIC (from LocationPage.jsx) ---
+  // Removed name and email prompts - keeping only auto register modal
+
+  // Auto-show register modal on first visit after 4 seconds (only if not already registered)
   useEffect(() => {
-    if (!showAnimation) {
-      // Count unique stamps
-      const stampCount = Object.keys(Cookies.get()).filter(k => k.startsWith('stamp_location_')).length;
-      if (!firstName && stampCount === 2) {
-        setShowFirstNamePrompt(true);
-      } else if (!email && (stampCount === 4 || stampCount === 5)) {
-        setShowEmailPrompt(true);
-      }
+    const user_id = Cookies.get('user_id');
+    const hasRegistered = user_id && user_id.length > 0;
+    
+    if (!showAnimation && !hasShownAutoModal && !hasRegistered) {
+      const timer = setTimeout(() => {
+        setShowRegisterModal(true);
+        setHasShownAutoModal(true);
+      }, 4000);
+
+      return () => clearTimeout(timer);
     }
-  }, [showAnimation, firstName, email]);
+  }, [showAnimation, hasShownAutoModal]);
 
   useEffect(() => {
     if (slug) {
       setCookieIfConsented(`stamp_location_${slug}`, 'true', { expires: 365 });
+      
       // Track the visit
       visitTracker.trackVisit(slug);
+      
+      // Increment visit count for prompt logic
+      const currentVisitCount = parseInt(Cookies.get('visit_count') || '0');
+      const newVisitCount = currentVisitCount + 1;
+      setCookieIfConsented('visit_count', newVisitCount.toString(), { expires: 365 });
     }
   }, [slug]);
 
-  const handleFirstNameSubmit = (e) => {
-    e.preventDefault();
-    if (firstNameInput.trim()) {
-      setCookieIfConsented('first_name', firstNameInput.trim(), { expires: 365 });
-      setFirstName(firstNameInput.trim());
-      setShowFirstNamePrompt(false);
-    }
-  };
-
-  const handleEmailSubmit = async (e) => {
-    e.preventDefault();
-    if (emailInput.trim()) {
-      setCookieIfConsented('email', emailInput.trim(), { expires: 365 });
-      setEmail(emailInput.trim());
-      setShowEmailPrompt(false);
-      // Register user
-      const name = Cookies.get('first_name');
-      const emailVal = emailInput.trim();
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:4000/api'}/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email: emailVal, store_id: 1 }),
-          credentials: 'include',
-        });
-        const data = await res.json();
-        if (data.user_id) {
-          setCookieIfConsented('user_id', data.user_id, { expires: 365 });
-        }
-      } catch { /* ignore error */ }
-    }
-  };
+  // Removed unused handler functions for name and email prompts
 
   /* stamp + prompt logic unchanged ... */
 
@@ -408,28 +382,6 @@ const NeighborhoodPage = () => {
 
       {/* hide content behind animation */}
       <div style={{ display: showAnimation ? 'none' : 'block' }}>
-        {/* First Name Prompt */}
-        {showFirstNamePrompt && (
-          <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(255,255,255,0.97)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <form onSubmit={handleFirstNameSubmit} style={{ background: '#fff', padding: 32, borderRadius: 12, boxShadow: '0 2px 8px #eee', textAlign: 'center' }}>
-              <h2 style={{ color: '#1c69d4' }}>So, you have visited us a couple of times, we should really be on a first name basis. What's yours?</h2>
-              <label style={{ fontSize: 18 }}>What's your first name?</label>
-              <input value={firstNameInput} onChange={e => setFirstNameInput(e.target.value)} required style={{ width: '100%', margin: '16px 0', padding: 8, fontSize: 16 }} />
-              <button type="submit" style={{ background: '#1c69d4', color: '#fff', padding: '10px 24px', border: 'none', borderRadius: 6, fontWeight: 'bold', fontSize: 16 }}>Continue</button>
-            </form>
-          </div>
-        )}
-        {/* Email Prompt */}
-        {showEmailPrompt && (
-          <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', background: 'rgba(255,255,255,0.97)', zIndex: 2000, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <form onSubmit={handleEmailSubmit} style={{ background: '#fff', padding: 32, borderRadius: 12, boxShadow: '0 2px 8px #eee', textAlign: 'center' }}>
-              <h2 style={{ color: '#1c69d4' }}>You're almost done! Enter your email to complete your passport and enter the contest.</h2>
-              <label style={{ fontSize: 18 }}>What's your email address?</label>
-              <input type="email" value={emailInput} onChange={e => setEmailInput(e.target.value)} required style={{ width: '100%', margin: '16px 0', padding: 8, fontSize: 16 }} />
-              <button type="submit" style={{ background: '#1c69d4', color: '#fff', padding: '10px 24px', border: 'none', borderRadius: 6, fontWeight: 'bold', fontSize: 16 }}>Submit</button>
-            </form>
-          </div>
-        )}
         {/* Hero Section */}
         <section
           style={{
@@ -439,10 +391,35 @@ const NeighborhoodPage = () => {
             color: '#fff',
             textAlign: 'center',
             padding: '120px 16px',
+            position: 'relative',
           }}
         >
-          <h1 style={{ margin: 0 }}>{n.title}</h1>
-          <p style={{ fontSize: 20 }}>{n.tagline}</p>
+          {/* Dark overlay for better text readability */}
+          <div style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'linear-gradient(135deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.4) 100%)',
+            zIndex: 1
+          }} />
+          
+          <div style={{ position: 'relative', zIndex: 2 }}>
+            <h1 style={{ 
+              margin: 0, 
+              fontSize: '3rem',
+              fontWeight: 'bold',
+              textShadow: '2px 2px 8px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5)',
+              letterSpacing: '1px'
+            }}>{n.title}</h1>
+            <p style={{ 
+              fontSize: 20, 
+              marginTop: '16px',
+              textShadow: '1px 1px 4px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5)',
+              fontWeight: '500'
+            }}>{n.tagline}</p>
+          </div>
         </section>
 
         {/* Info Section */}
@@ -468,9 +445,9 @@ const NeighborhoodPage = () => {
                 outline: 'none',
                 margin: 0,
               }}
-              aria-label="Enter the BMW How To Pittsburgh contest"
+              aria-label="Enter BMW's How To Pittsburgh contest"
             >
-              Enter the BMW "How To Pittsburgh" Contest
+              Enter BMW's "How To Pittsburgh" Contest
             </button>
           </div>
           {showRegisterModal && <RegisterModal onClose={() => setShowRegisterModal(false)} />}

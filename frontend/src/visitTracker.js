@@ -62,6 +62,11 @@ class VisitTracker {
       if (visitResponse.ok) {
         const visitData = await visitResponse.json();
         console.log(`Visit tracked for ${slug}:`, visitData);
+        
+        // Increment visit count for prompt logic
+        const currentVisitCount = parseInt(Cookies.get('visit_count') || '0');
+        const newVisitCount = currentVisitCount + 1;
+        Cookies.set('visit_count', newVisitCount.toString(), { expires: 365 });
       } else {
         console.warn(`Failed to track visit for ${slug}:`, await visitResponse.text());
       }
