@@ -15,10 +15,13 @@ async function populateLocations() {
     // First, ensure we have a store
     await pool.query('INSERT IGNORE INTO stores (id, name, address) VALUES (1, "BMW Pittsburgh", "Pittsburgh, PA")');
     
+    // Clear existing locations first to remove any duplicates or incorrect entries
+    await pool.query('DELETE FROM locations');
+    
     // Insert locations
     for (const location of LOCATIONS) {
       await pool.query(
-        'INSERT IGNORE INTO locations (id, name, store_id) VALUES (?, ?, ?)',
+        'INSERT INTO locations (id, name, store_id) VALUES (?, ?, ?)',
         [location.id, location.name, location.store_id]
       );
       console.log(`Added location: ${location.name}`);
